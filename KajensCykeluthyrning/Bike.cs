@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KajensCykeluthyrning
+﻿namespace KajensCykeluthyrning
 {
-    internal class Bike
+    public class Bike
     {
+
     }
 }
