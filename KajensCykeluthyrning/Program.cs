@@ -29,3 +29,11 @@ Console.WriteLine($"{eBikeOne.CalculatePrice(rentalOne.TimeRented):F2} kr");
 Console.WriteLine($"{rentalOne.CalculateDiscount():F2}");
 
 Console.WriteLine($"{eBikeOne.CalculatePrice(rentalOne.TimeRented) - rentalOne.CalculateDiscount():F2} kr");
+
+RentalSystem system = new RentalSystem();
+system.ShowVehicles();
+system.AddCustomer();
+system.ShowCustomers();
+system.RentBike();
+system.ReturnBike();
+system.ShowVehicles();
