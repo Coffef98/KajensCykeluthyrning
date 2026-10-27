@@ -18,8 +18,6 @@ namespace KajensCykeluthyrning
 
             vehicles.Add(new ElectricBike(3));
             vehicles.Add(new ElectricBike(4));
-            ElectricBike electricBike = (ElectricBike)vehicles[2];
-            electricBike.ConsumeBattery(8);
         }
         
         public void ShowVehicles()
@@ -73,6 +71,15 @@ namespace KajensCykeluthyrning
                         return;
                     }
 
+                    if (vehicle is ElectricBike electricBike)
+                    {
+                        if (electricBike.BatteryLevel < 30)
+                        {
+                            Console.WriteLine("För lågt batteri, ladda först!");
+                            return;
+                        }
+                    }
+
                     ShowCustomers();
                     Console.WriteLine("Ange namnet på kunden som vill hyra:");
                     string customerName = Console.ReadLine();
@@ -88,10 +95,10 @@ namespace KajensCykeluthyrning
 
                                 Rental rental = new Rental(hours, customer, vehicle);
                                 rental.RentVehicle();
-                                if (vehicle is ElectricBike electricBike)
+                                if (vehicle is ElectricBike bike)
                                 {
-                                    electricBike.ConsumeBattery(hours);
-                                    electricBike.DisplayInfo();
+                                    bike.ConsumeBattery(hours);
+                                    bike.DisplayInfo();
                                 }
                                 rentals.Add(rental);
                                 decimal price = vehicle.CalculatePrice(hours);
