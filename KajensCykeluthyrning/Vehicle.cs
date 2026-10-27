@@ -21,7 +21,10 @@
 
         public virtual void DisplayInfo()
         {
-            Console.WriteLine($"{SerialNumber} {HourlyRate} {IsRented}");
+            Console.WriteLine($"Serienummer: {SerialNumber}");
+            Console.WriteLine($"Timpris: {HourlyRate} kr");
+            Console.WriteLine($"Status: {(IsRented ? "Uthyrd" : "Tillgänglig")}");
+
         }
     }
 }

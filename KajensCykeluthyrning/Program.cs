@@ -1,39 +1,56 @@
 ﻿using KajensCykeluthyrning;
 
-Bike bikeOne = new Bike(1337);
-
-bikeOne.DisplayInfo();
-
-ElectricBike eBikeOne = new ElectricBike(1);
-
-eBikeOne.ConsumeBattery(3);
-eBikeOne.Charge();
-eBikeOne.DisplayInfo();
-
-
-Customer customerOne = new Customer("Christoffer", 28, true);
-Console.WriteLine($"Namn: {customerOne.Name}");
-Console.WriteLine($"Ålder: {customerOne.Age}");
-Console.WriteLine($"Medlem: {customerOne.IsMember}");
-
-Rental rentalOne = new Rental(1.3m, customerOne, eBikeOne);
-
-rentalOne.RentVehicle();
-eBikeOne.DisplayInfo();
-
-rentalOne.ReturnVehicle();
-eBikeOne.DisplayInfo();
-
-Console.WriteLine($"{eBikeOne.CalculatePrice(rentalOne.TimeRented):F2} kr");
-
-Console.WriteLine($"{rentalOne.CalculateDiscount():F2}");
-
-Console.WriteLine($"{eBikeOne.CalculatePrice(rentalOne.TimeRented) - rentalOne.CalculateDiscount():F2} kr");
-
 RentalSystem system = new RentalSystem();
-system.ShowVehicles();
+
+/*system.ShowVehicles();
 system.AddCustomer();
 system.ShowCustomers();
 system.RentBike();
 system.ReturnBike();
-system.ShowVehicles();
+system.ShowVehicles(); */
+
+while (true)
+{
+    Console.WriteLine("---- Kajens Cykeluthyrning ----");
+    Console.WriteLine("1. Visa cyklar");
+    Console.WriteLine("2. Registrera kund");
+    Console.WriteLine("3. Visa kunder");
+    Console.WriteLine("4. Hyr cykel");
+    Console.WriteLine("5. Lämna tillbaka cykel");
+    Console.WriteLine("6. Avsluta");
+    string choice = Console.ReadLine();
+
+    if (choice == "1")
+    {
+        system.ShowVehicles();
+    }
+
+    else if (choice == "2")
+    {
+        system.AddCustomer();
+    }
+
+    else if (choice == "3")
+    {
+        system.ShowCustomers();
+    }
+
+    else if (choice == "4")
+    {
+        system.RentBike();
+    }
+
+    else if (choice == "5")
+    {
+        system.ReturnBike();
+    }
+    else if (choice == "6")
+    {
+        break;
+    }
+    else
+    {
+        Console.WriteLine("Ogiltigt val!");
+    }
+}
+

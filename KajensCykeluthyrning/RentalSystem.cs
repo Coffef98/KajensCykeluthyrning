@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace KajensCykeluthyrning
+﻿namespace KajensCykeluthyrning
 {
     public class RentalSystem
     {
@@ -19,27 +17,45 @@ namespace KajensCykeluthyrning
             vehicles.Add(new ElectricBike(3));
             vehicles.Add(new ElectricBike(4));
         }
-        
+
         public void ShowVehicles()
         {
+            Console.WriteLine("\n---- Cykelöversikt ----");
+
             foreach (Vehicle vehicle in vehicles)
             {
                 vehicle.DisplayInfo();
+                Console.WriteLine();
             }
         }
 
         public void AddCustomer()
         {
+            Console.WriteLine("\n---- Kundregistrering ----");
             Console.WriteLine("Ange ditt namn:");
             string name = Console.ReadLine();
-            
+
+            foreach (Customer existingCustomer in customers)
+            {
+                if (existingCustomer.Name == name)
+                {
+                    Console.WriteLine("Kunden är redan registrerad");
+                    return;
+                }
+            }
+
             Console.WriteLine("Ange din ålder:");
-            int age = Convert.ToInt32(Console.ReadLine());
+            bool validAge = int.TryParse(Console.ReadLine(), out int age); 
+            if (validAge == false || age < 0)
+            {
+                Console.WriteLine("Ogiltig ålder, ange ett nummer!");
+                return;
+            }
 
-            Console.WriteLine("Är du medlem? (Ja/Nej)"); 
-            string memberAnswer = Console.ReadLine(); 
+            Console.WriteLine("Är du medlem? (Ja/Nej)");
+            string memberAnswer = Console.ReadLine();
 
-            bool isMember = memberAnswer == "Ja"; // Resulterar i dagsläget att man måste skriva uppercase Ja för att bli medlem. 
+            bool isMember = memberAnswer.ToLower() == "ja"; 
 
             Customer customer = new Customer(name, age, isMember);
 
@@ -49,9 +65,13 @@ namespace KajensCykeluthyrning
 
         public void ShowCustomers()
         {
+            Console.WriteLine("\n---- Kundöversikt ----");
             foreach (Customer customer in customers)
             {
-                Console.WriteLine($"Namn:{customer.Name} Ålder:{customer.Age} Medlemskap:{customer.IsMember}");
+                Console.WriteLine($"Namn: {customer.Name}");
+                Console.WriteLine($"Ålder: {customer.Age}");
+                Console.WriteLine($"Medlemskap: {(customer.IsMember ? "Ja" : "Nej")}");
+                Console.WriteLine();
             }
         }
 
@@ -60,11 +80,12 @@ namespace KajensCykeluthyrning
             ShowVehicles();
             Console.WriteLine("Ange serienumret på cykeln du vill hyra:");
             int serialNumber = Convert.ToInt32(Console.ReadLine());
-
+            bool vehicleFound = false;
             foreach (Vehicle vehicle in vehicles)
             {
                 if (vehicle.SerialNumber == serialNumber)
                 {
+                    vehicleFound = true;
                     if (vehicle.IsRented == true)
                     {
                         Console.WriteLine("Cykeln är redan uthyrd");
@@ -83,15 +104,22 @@ namespace KajensCykeluthyrning
                     ShowCustomers();
                     Console.WriteLine("Ange namnet på kunden som vill hyra:");
                     string customerName = Console.ReadLine();
+                    bool customerFound = false;
 
                     foreach (Customer customer in customers)
                     {
                         if (customer.Name == customerName)
                         {
+                            customerFound = true;
                             if (customer.Age >= vehicle.MinimumAge)
                             {
                                 Console.WriteLine("Hur länge vill du hyra cykeln?");
-                                decimal hours = Convert.ToDecimal(Console.ReadLine());
+                                bool validHours = decimal.TryParse(Console.ReadLine(), out decimal hours);
+                                if (validHours == false || hours <= 0)
+                                {
+                                    Console.WriteLine("Ogiltig tidspann");
+                                    return;
+                                }
 
                                 Rental rental = new Rental(hours, customer, vehicle);
                                 rental.RentVehicle();
@@ -104,8 +132,13 @@ namespace KajensCykeluthyrning
                                 decimal price = vehicle.CalculatePrice(hours);
                                 decimal discount = rental.CalculateDiscount();
                                 decimal finalPrice = price - discount;
-                                Console.WriteLine("Cykeln har hyrts ut!");
-                                Console.WriteLine($"Totalkostnad: {finalPrice:F2} kr");
+                                Console.WriteLine("\n---- Uthyrningsbekräftelse ----");
+                                Console.WriteLine($"Kundnamn: {customer.Name}");
+                                Console.WriteLine($"Cykel: {serialNumber} har hyrts ut");
+                                Console.WriteLine($"Hyrestid: {rental.TimeRented} timmar");
+                                Console.WriteLine($"Rabatt: {discount:F2} kr");
+                                Console.WriteLine($"Slutpris: {finalPrice:F2} kr");
+                                Console.WriteLine();
                                 return;
                             }
                             else if (customer.Age < vehicle.MinimumAge)
@@ -115,33 +148,56 @@ namespace KajensCykeluthyrning
                             }
                         }
                     }
+                    if (customerFound == false)
+                    {
+                        Console.WriteLine("Kunden finns inte registrerad i systemet.");
+                        return;
+                    }
                 }
             }
-        }
-            public void ReturnBike()
+            if (vehicleFound == false)
             {
+                Console.WriteLine("Finns ej cykel i systemet med detta serienummer.");
+            }
+        }
+        public void ReturnBike()
+        {
             ShowVehicles();
             Console.WriteLine("Ange serienumret på cykeln du vill lämna tillbaka:");
             int serialnumber = Convert.ToInt32(Console.ReadLine());
-
+            bool vehicleFound = false;
             foreach (Vehicle vehicle in vehicles)
             {
                 if (vehicle.SerialNumber == serialnumber)
-                {
+                {     
+                    vehicleFound = true;
+                
                     if (vehicle.IsRented == true)
                     {
-                        foreach (Rental rental in rentals)
+                        foreach (Rental rental in rentals.AsEnumerable().Reverse())
                         {
                             if (rental.Vehicle.SerialNumber == serialnumber)
                             {
                                 rental.ReturnVehicle();
-                                Console.WriteLine("Cykeln har lämnats tillbaka");
+                                Console.WriteLine("\n---- Återlämningsbekräftelse ----");
+                                Console.WriteLine($"Kundnamn: {rental.Customer.Name}");
+                                Console.WriteLine($"Cykel: {serialnumber} har återlämnats");
+                                Console.WriteLine();
                                 return;
                             }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("Cykeln är inte uthyrd.");
+                        return;
+                    }
                 }
             }
+            if (vehicleFound == false)
+            {
+                Console.WriteLine("Finns ej cykel i systemet med detta serienummer.");
             }
+        }
     }
 }

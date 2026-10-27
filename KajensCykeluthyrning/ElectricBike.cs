@@ -24,7 +24,7 @@
         public override void DisplayInfo()
         {
             base.DisplayInfo();
-            Console.WriteLine($"{BatteryLevel} %");
+            Console.WriteLine($"Batterinivå: {BatteryLevel} %");
         }
     }
 }
