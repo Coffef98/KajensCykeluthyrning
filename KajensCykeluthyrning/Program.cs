@@ -17,7 +17,8 @@ while (true)
     Console.WriteLine("3. Visa kunder");
     Console.WriteLine("4. Hyr cykel");
     Console.WriteLine("5. Lämna tillbaka cykel");
-    Console.WriteLine("6. Avsluta");
+    Console.WriteLine("6. Ladda elcykel");
+    Console.WriteLine("7. Avsluta");
     string choice = Console.ReadLine();
 
     if (choice == "1")
@@ -46,11 +47,15 @@ while (true)
     }
     else if (choice == "6")
     {
+        system.ChargeBike();
+    }
+    else if (choice == "7")
+    {
         break;
     }
     else
     {
-        Console.WriteLine("Ogiltigt val!");
+        Console.WriteLine("Ogiltigt alternativ");
     }
 }
 

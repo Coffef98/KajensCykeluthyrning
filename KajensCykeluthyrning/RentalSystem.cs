@@ -45,7 +45,7 @@
             }
 
             Console.WriteLine("Ange din ålder:");
-            bool validAge = int.TryParse(Console.ReadLine(), out int age); 
+            bool validAge = int.TryParse(Console.ReadLine(), out int age);
             if (validAge == false || age < 0)
             {
                 Console.WriteLine("Ogiltig ålder, ange ett nummer!");
@@ -55,7 +55,7 @@
             Console.WriteLine("Är du medlem? (Ja/Nej)");
             string memberAnswer = Console.ReadLine();
 
-            bool isMember = memberAnswer.ToLower() == "ja"; 
+            bool isMember = memberAnswer.ToLower() == "ja";
 
             Customer customer = new Customer(name, age, isMember);
 
@@ -169,9 +169,9 @@
             foreach (Vehicle vehicle in vehicles)
             {
                 if (vehicle.SerialNumber == serialnumber)
-                {     
+                {
                     vehicleFound = true;
-                
+
                     if (vehicle.IsRented == true)
                     {
                         foreach (Rental rental in rentals.AsEnumerable().Reverse())
@@ -198,6 +198,43 @@
             {
                 Console.WriteLine("Finns ej cykel i systemet med detta serienummer.");
             }
+        }
+        public void ChargeBike()
+        {
+            ShowVehicles();
+
+            Console.WriteLine("Ange serienumret på cykeln du vill ladda:");
+            bool validNumber = int.TryParse(Console.ReadLine(), out int serialNumber);
+
+            if (validNumber == false)
+            {
+                Console.WriteLine("Ogiltigt serienummer");
+                return;
+            }
+
+            foreach (Vehicle vehicle in vehicles)
+            {
+                if (vehicle.SerialNumber == serialNumber)
+                {
+                    if (vehicle is ElectricBike electricBike)
+                    {
+                        if (vehicle.IsRented)
+                        {
+                            Console.WriteLine("Du kan inte ladda en uthyrd elcykel.");
+                            return;
+                        }
+
+                        electricBike.Charge();
+
+                        Console.WriteLine($"Elcykel: {serialNumber} har laddats till {electricBike.BatteryLevel} %.");
+                        return;
+                    }
+
+                    Console.WriteLine("Denna cykel har inget batteri");
+                    return;
+                }
+            }
+            Console.WriteLine("Ingen cykel hittades med detta serienummer");
         }
     }
 }
