@@ -113,7 +113,7 @@
                             customerFound = true;
                             if (customer.Age >= vehicle.MinimumAge)
                             {
-                                Console.WriteLine("Hur länge vill du hyra cykeln?");
+                                Console.WriteLine("Ange hyrestid i timmar. (t.ex 1,5 eller 2)");
                                 bool validHours = decimal.TryParse(Console.ReadLine(), out decimal hours);
                                 if (validHours == false || hours <= 0)
                                 {
@@ -179,9 +179,19 @@
                             if (rental.Vehicle.SerialNumber == serialnumber)
                             {
                                 rental.ReturnVehicle();
-                                Console.WriteLine("\n---- Återlämningsbekräftelse ----");
+
+                                decimal price = vehicle.CalculatePrice(rental.TimeRented);
+                                decimal discount = rental.CalculateDiscount();
+                                decimal finalprice = price - discount;
+
+                                Console.WriteLine("\n---- Kvitto ----");
                                 Console.WriteLine($"Kundnamn: {rental.Customer.Name}");
                                 Console.WriteLine($"Cykel: {serialnumber} har återlämnats");
+                                Console.WriteLine($"Hyrestid: {rental.TimeRented} timmar");
+                                Console.WriteLine($"Timpris: {vehicle.HourlyRate:F2} kr");
+                                Console.WriteLine($"Ordinarie pris: {price:F2} kr");
+                                Console.WriteLine($"Medlemsrabatt: -{discount:F2} kr");
+                                Console.WriteLine($"Att betala: {finalprice:F2} kr");
                                 Console.WriteLine();
                                 return;
                             }
@@ -226,7 +236,7 @@
 
                         electricBike.Charge();
 
-                        Console.WriteLine($"Elcykel: {serialNumber} har laddats till {electricBike.BatteryLevel} %.");
+                        Console.WriteLine($"Elcykel: {serialNumber} har laddats till {electricBike.BatteryLevel}%.");
                         return;
                     }
 

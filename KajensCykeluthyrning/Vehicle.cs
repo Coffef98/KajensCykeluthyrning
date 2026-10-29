@@ -21,10 +21,10 @@
 
         public virtual void DisplayInfo()
         {
+            Console.WriteLine($"Fordonstyp: {(this is ElectricBike ? "Elcykel" : "Cykel")}");
             Console.WriteLine($"Serienummer: {SerialNumber}");
             Console.WriteLine($"Timpris: {HourlyRate} kr");
             Console.WriteLine($"Status: {(IsRented ? "Uthyrd" : "Tillgänglig")}");
-
         }
     }
 }
