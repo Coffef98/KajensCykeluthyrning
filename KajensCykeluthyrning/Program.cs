@@ -2,13 +2,6 @@
 
 RentalSystem system = new RentalSystem();
 
-/*system.ShowVehicles();
-system.AddCustomer();
-system.ShowCustomers();
-system.RentBike();
-system.ReturnBike();
-system.ShowVehicles(); */
-
 while (true)
 {
     Console.WriteLine("---- Kajens Cykeluthyrning ----");
